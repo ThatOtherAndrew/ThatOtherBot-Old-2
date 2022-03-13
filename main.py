@@ -2,7 +2,6 @@ import logging
 
 import discord
 from discord.ext import commands
-from discord import app_commands
 
 from bot.tools import get_extensions
 
@@ -20,12 +19,16 @@ class Bot(commands.Bot):
 
 
 bot = Bot(command_prefix='!', intents=discord.Intents.all())
-tree = app_commands.CommandTree(bot)
 
 
 @bot.event
 async def on_ready():
     bot.logger.info(f'Logged in as {bot.user}')
+
+
+@bot.tree.command(guild=discord.Object(id=824577786496417844))
+async def test(interaction: discord.Interaction):
+    await interaction.response.send_message('Received!', ephemeral=True)
 
 
 if __name__ == '__main__':
