@@ -1,9 +1,10 @@
 import logging
-import sys
 
 import discord
 from discord.ext import commands
 from discord import app_commands
+
+from bot.tools import get_extensions
 
 
 class Bot(commands.Bot):
@@ -13,12 +14,9 @@ class Bot(commands.Bot):
         self.logger = logging.getLogger('discord')
         self.logger.setLevel(logging.INFO)
         formatter = logging.Formatter('[%(asctime)s %(levelname)s] %(name)s: %(message)s')
-        file_handler = logging.FileHandler('logs/discord.log', 'w', 'utf-8')
-        file_handler.setFormatter(formatter)
-        stream_handler = logging.StreamHandler(sys.stdout)
-        stream_handler.setFormatter(formatter)
-        self.logger.addHandler(file_handler)
-        self.logger.addHandler(logging.StreamHandler(sys.stdout))
+        handler = logging.FileHandler('logs/discord.log', 'w', 'utf-8')
+        handler.setFormatter(formatter)
+        self.logger.addHandler(handler)
 
 
 bot = Bot(command_prefix='!', intents=discord.Intents.all())
@@ -31,4 +29,11 @@ async def on_ready():
 
 
 if __name__ == '__main__':
-    bot.run(input('Token: '))
+    for extension in get_extensions('bot/extensions'):
+        try:
+            bot.load_extension(extension)
+            bot.logger.info(f'Extension loaded: {extension}')
+        except Exception as extension_error:
+            bot.logger.error(extension_error)
+
+    bot.run(input())
