@@ -14,9 +14,10 @@ class Core(commands.Cog):
 
     @commands.command()
     async def sync(self, ctx: commands.Context):
-        await self.bot.tree.sync(guild=discord.Object(id=824577786496417844))
+        self.bot.tree.copy_global_to(guild=discord.Object(id=ctx.guild.id))
+        await self.bot.tree.sync(guild=discord.Object(id=ctx.guild.id))
         await ctx.reply('Synchronised the bot command tree.')
 
 
-def setup(bot: Bot):
-    bot.add_cog(Core(bot))
+async def setup(bot: Bot):
+    await bot.add_cog(Core(bot))
