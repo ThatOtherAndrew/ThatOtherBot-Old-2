@@ -3,6 +3,8 @@ from typing import Callable, Union, Iterable
 
 import tomlkit
 
+from bot.tools import log
+
 
 class Option:
     def __init__(self, key: str, value: object, *, enforce_type: bool = True,
@@ -32,9 +34,11 @@ def load(file: str) -> tomlkit.TOMLDocument:
     """Loads TOML settings from a given path, or generates a new file if it doesn't exist"""
     settings_path = Path(file)
     if settings_path.is_file():
+        log.info(f'Loaded configuration from {settings_path.name}')
         with settings_path.open('r') as f:
             settings = tomlkit.load(f)
     else:
+        log.info(f'Configuration file {settings_path.name} missing, generating from template')
         settings = generate(TEMPLATE)
         with settings_path.open('w') as f:
             tomlkit.dump(settings, f)
@@ -42,11 +46,8 @@ def load(file: str) -> tomlkit.TOMLDocument:
     return validate(settings, TEMPLATE)
 
 
-def save():
-    pass
-
-
 def generate(template: list[Union[Option, tomlkit.api.Comment, tomlkit.api.Whitespace]]) -> tomlkit.TOMLDocument:
+    """Generates a TOML document from a provided settings template"""
     document = tomlkit.TOMLDocument()
     for item in template:
         match item:
@@ -62,6 +63,7 @@ def generate(template: list[Union[Option, tomlkit.api.Comment, tomlkit.api.White
 
 def validate(settings: tomlkit.TOMLDocument,
              template: list[Union[Option, tomlkit.api.Comment, tomlkit.api.Whitespace]]) -> tomlkit.TOMLDocument:
+    """Takes a TOML document and validates it against a provided settings template"""
     for item in template:
         match item:
             case Option():
