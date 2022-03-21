@@ -3,19 +3,22 @@ import logging
 import discord
 from discord.ext import commands
 
+from bot import settings
 from bot.tools import get_extensions
 
 
 class Bot(commands.Bot):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
         self.logger = logging.getLogger('discord')
         self.logger.setLevel(logging.INFO)
         formatter = logging.Formatter('[%(asctime)s %(levelname)s] %(name)s: %(message)s')
         handler = logging.FileHandler('logs/discord.log', 'w', 'utf-8')
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
+
+        super().__init__(*args, **kwargs)
+
+        self.settings = settings.load('settings.toml')
 
     async def setup_hook(self):
         for extension in get_extensions('bot/extensions'):
