@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Callable, Union, Iterable
+from typing import Callable, Iterable
 
 import tomlkit
 
@@ -20,8 +20,8 @@ class Option:
 Comment = tomlkit.comment
 Newline = tomlkit.nl
 
-settings_template = list[Union[Option, tomlkit.api.Comment, tomlkit.api.Whitespace]]
-document_or_table = Union[tomlkit.TOMLDocument, tomlkit.api.Table]
+settings_template = list[Option | tomlkit.api.Comment | tomlkit.api.Whitespace]
+document_or_table = tomlkit.TOMLDocument | tomlkit.api.Table
 
 TEMPLATE = [
     Comment('0: Disable logging'),
@@ -32,9 +32,9 @@ TEMPLATE = [
 ]
 
 
-def load(file: str) -> tomlkit.TOMLDocument:
+def load(file_path: str | Path) -> tomlkit.TOMLDocument:
     """Loads TOML settings from a given path, or generates a new file if it doesn't exist"""
-    settings_path = Path(file)
+    settings_path = Path(file_path)
     if settings_path.is_file():
         log.info(f'Loaded configuration from {settings_path.name}')
         with settings_path.open('r') as f:
@@ -42,10 +42,16 @@ def load(file: str) -> tomlkit.TOMLDocument:
     else:
         log.info(f'Configuration file {settings_path.name} missing, generating from template')
         settings = generate(TEMPLATE)
-        with settings_path.open('w') as f:
-            tomlkit.dump(settings, f)
+        save(settings, settings_path)
 
     return validate(settings, TEMPLATE)
+
+
+def save(document: tomlkit.TOMLDocument, file_path: str | Path) -> None:
+    """Save a TOML document to a given path"""
+    settings_path = Path(file_path)
+    with settings_path.open('w') as f:
+        tomlkit.dump(document, f)
 
 
 def generate(template: settings_template, *, table: bool = False) -> document_or_table:
