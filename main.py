@@ -21,7 +21,7 @@ class Bot(commands.Bot):
 
         log.info(f'Logged in as {bot.user}')
 
-    async def add_cog(self, cog: commands.Cog, /, *, settings_template: dict[str, dict] = None, **kwargs):
+    async def add_cog(self, cog: commands.Cog, /, *, settings_template: settings.settings_template = None, **kwargs):
         await super().add_cog(cog, **kwargs)
 
 

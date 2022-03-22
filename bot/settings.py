@@ -20,6 +20,8 @@ class Option:
 Comment = tomlkit.comment
 Newline = tomlkit.nl
 
+settings_template = list[Union[Option, tomlkit.api.Comment, tomlkit.api.Whitespace]]
+document_or_table = Union[tomlkit.TOMLDocument, tomlkit.api.Table]
 
 TEMPLATE = [
     Comment('0: Disable logging'),
@@ -46,9 +48,9 @@ def load(file: str) -> tomlkit.TOMLDocument:
     return validate(settings, TEMPLATE)
 
 
-def generate(template: list[Union[Option, tomlkit.api.Comment, tomlkit.api.Whitespace]]) -> tomlkit.TOMLDocument:
-    """Generates a TOML document from a provided settings template"""
-    document = tomlkit.TOMLDocument()
+def generate(template: settings_template, *, table: bool = False) -> document_or_table:
+    """Generates a TOML document or table from a provided settings template"""
+    document = tomlkit.table() if table else tomlkit.TOMLDocument()
     for item in template:
         match item:
             case Option():
@@ -61,8 +63,7 @@ def generate(template: list[Union[Option, tomlkit.api.Comment, tomlkit.api.White
     return document
 
 
-def validate(settings: tomlkit.TOMLDocument,
-             template: list[Union[Option, tomlkit.api.Comment, tomlkit.api.Whitespace]]) -> tomlkit.TOMLDocument:
+def validate(settings: document_or_table, template: settings_template) -> document_or_table:
     """Takes a TOML document and validates it against a provided settings template"""
     for item in template:
         match item:
