@@ -1,16 +1,22 @@
+from typing import TYPE_CHECKING
+
 import discord
 from discord.ext import commands
 
-from main import Bot
+from bot.settings import Option
+
+if TYPE_CHECKING:
+    from main import Bot
+
+
+settings = [
+    Option('test_message', 'Received!'),
+]
 
 
 class Core(commands.Cog):
-    def __init__(self, bot: Bot):
+    def __init__(self, bot: 'Bot'):
         self.bot = bot
-
-    @commands.command()
-    async def test(self, ctx: commands.Context):
-        await ctx.reply('Received!')
 
     @commands.command()
     async def sync(self, ctx: commands.Context):
@@ -19,5 +25,5 @@ class Core(commands.Cog):
         await ctx.reply('Synchronised the bot command tree.')
 
 
-async def setup(bot: Bot):
-    await bot.add_cog(Core(bot))
+async def setup(bot: 'Bot'):
+    await bot.add_cog(Core(bot), settings_template=settings)
