@@ -1,9 +1,11 @@
+from logging import getLogger
 from pathlib import Path
 from typing import Callable, Iterable
 
 import tomlkit
 
-from bot.tools import log
+
+_logger = getLogger('discord')
 
 
 class Option:
@@ -36,15 +38,15 @@ def load(file_path: str | Path) -> tomlkit.TOMLDocument:
     """Loads TOML settings from a given path, or generates a new file if it doesn't exist"""
     settings_path = Path(file_path)
     if settings_path.is_file():
-        log.info(f'Loaded configuration from {settings_path.name}')
+        _logger.info(f'Loaded configuration from {settings_path.name}')
         with settings_path.open('r') as f:
-            settings = tomlkit.load(f)
+            document = tomlkit.load(f)
     else:
-        log.info(f'Configuration file {settings_path.name} missing, generating from template')
-        settings = generate(TEMPLATE)
-        save(settings, settings_path)
+        _logger.info(f'Configuration file {settings_path.name} missing, generating from template')
+        document = generate(TEMPLATE)
+        save(document, settings_path)
 
-    return validate(settings, TEMPLATE)
+    return validate(document, TEMPLATE)
 
 
 def save(document: tomlkit.TOMLDocument, file_path: str | Path) -> None:
@@ -69,18 +71,18 @@ def generate(template: settings_template, *, table: bool = False) -> document_or
     return document
 
 
-def validate(settings: document_or_table, template: settings_template) -> document_or_table:
+def validate(toml_document: document_or_table, template: settings_template) -> document_or_table:
     """Takes a TOML document and validates it against a provided settings template"""
     for item in template:
         match item:
             case Option():
-                if item.key in settings:
-                    if not item.type_accepts(settings[item.key]):
+                if item.key in toml_document:
+                    if not item.type_accepts(toml_document[item.key]):
                         raise TypeError(f'{item.key} setting must be of type {type(item.value).__name__}, '
-                                        f'but {type(settings[item.key]).__name__.lower()} was provided')
-                    if not item.enum_accepts(settings[item.key]):
+                                        f'but {type(toml_document[item.key]).__name__.lower()} was provided')
+                    if not item.enum_accepts(toml_document[item.key]):
                         raise ValueError(f'{item.key} setting must be one of {item.enum}')
-                    if not item.validator_accepts(settings[item.key]):
+                    if not item.validator_accepts(toml_document[item.key]):
                         raise ValueError(f'{item.key} setting did not pass validation condition')
                 else:
                     pass  # TODO: append setting to file if not there
@@ -89,4 +91,7 @@ def validate(settings: document_or_table, template: settings_template) -> docume
             case _:
                 raise TypeError('Template can only contain Option, Comment and Whitespace items')
 
-    return settings
+    return toml_document
+
+
+settings = load('settings.toml')
