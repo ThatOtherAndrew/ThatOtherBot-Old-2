@@ -29,6 +29,12 @@ class Bot(commands.Bot):
         bot_settings.save(settings, 'settings.toml')
         await super().add_cog(cog, **kwargs)
 
+    def run(self, token: str, *args, **kwargs):
+        if not token:
+            raise ValueError('Bot token is not specified')
+
+        super().run(token, *args, **kwargs)
+
 
 bot = Bot(command_prefix='!', intents=discord.Intents.all())
 
@@ -39,4 +45,4 @@ async def test(interaction: discord.Interaction):
 
 
 if __name__ == '__main__':
-    bot.run(input())
+    bot.run(settings['bot_token'])

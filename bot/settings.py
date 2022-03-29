@@ -26,6 +26,9 @@ settings_template = list[Option | tomlkit.api.Comment | tomlkit.api.Whitespace]
 document_or_table = tomlkit.TOMLDocument | tomlkit.api.Table
 
 TEMPLATE = [
+    Comment('Add your bot token into the below string - don\'t share this with anybody!'),
+    Option('bot_token', ''),
+    Newline(),
     Comment('0: Disable logging'),
     Comment('1: Log warnings and errors'),
     Comment('2: Log information in addition to warnings and errors'),
@@ -85,7 +88,8 @@ def validate(toml_document: document_or_table, template: settings_template) -> d
                     if not item.validator_accepts(toml_document[item.key]):
                         raise ValueError(f'{item.key} setting did not pass validation condition')
                 else:
-                    pass  # TODO: append setting to file if not there
+                    raise KeyError(f'{item.key} setting was not found')
+                    # TODO: append setting to file if not there
             case tomlkit.api.Comment() | tomlkit.api.Whitespace():
                 pass  # Ignore comments and whitespace during validation, otherwise things get very complicated
             case _:
