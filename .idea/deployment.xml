@@ -5,7 +5,7 @@
       <paths name="ThatOtherServer">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/home/andrew/discord/ThatOtherBot" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
