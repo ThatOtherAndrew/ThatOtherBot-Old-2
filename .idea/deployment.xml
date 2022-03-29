@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="ThatOtherServer" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" promptOnRemoteOverwrite="CHECK_CONTENT" serverName="ThatOtherServer" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
       <paths name="ThatOtherServer">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/home/andrew/discord/ThatOtherBot" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
