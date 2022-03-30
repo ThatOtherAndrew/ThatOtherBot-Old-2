@@ -10,7 +10,7 @@ class Bot(commands.Bot):
         for extension in get_extensions('bot/extensions'):
             try:
                 await bot.load_extension(extension)
-                log.info(f'Extension loaded: {extension}')
+                log.info(f'Extension loaded: {extension.removeprefix("bot.extensions.")}')
             except Exception as extension_error:
                 log.error(extension_error)
 
