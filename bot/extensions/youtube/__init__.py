@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import discord
@@ -10,6 +11,7 @@ if TYPE_CHECKING:
     from main import Bot
 
 
+root = Path(__file__).parent
 settings = [
     Option('key', 'value'),
 ]
@@ -28,10 +30,10 @@ class YouTube(Cog):
         else:
             embed = discord.Embed(
                 title='No YouTube search results found',
-                description='Try rewording your query',
+                description='Try rewording your query, or try again later if there are still no results found.',
                 color=0xFF0000
             )
-            icon = discord.File('assets/img/e.png', filename='icon.png')
+            icon = discord.File(root/'search.png', filename='icon.png')
             embed.set_thumbnail(url='attachment://icon.png')
             await interaction.response.send_message(embed=embed, file=icon, ephemeral=True)
 
