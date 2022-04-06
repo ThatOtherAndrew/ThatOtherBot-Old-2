@@ -16,7 +16,7 @@ class Bot(commands.Bot):
 
         if settings['debug_mode']:
             self.tree.copy_global_to(guild=discord.Object(id=settings['debug_guild_id']))
-            log.info(f'Copied global slash commands to guild ID {settings["debug_guild_id"]}')
+            log.debug(f'Copied global slash commands to guild ID {settings["debug_guild_id"]}')
 
         log.info(f'Logged in as {bot.user}')
 
@@ -51,4 +51,10 @@ async def test(interaction: discord.Interaction):
 
 
 if __name__ == '__main__':
+    if settings['debug_mode']:
+        if settings['logging_level'] == 3:
+            log.debug('Debug mode is enabled')
+        else:
+            log.warning(f'Debug mode is enabled, but current logging level is set to {settings["logging_level"]}')
+
     bot.run(settings['bot_token'])

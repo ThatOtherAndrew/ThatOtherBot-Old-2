@@ -17,7 +17,7 @@ def init_logger(logging_level: int = logging.NOTSET) -> logging.Logger:
     return logger
 
 
-log = init_logger((logging.WARNING, logging.INFO, logging.NOTSET)[settings['logging_level'] - 1])
+log = init_logger((logging.WARNING, logging.INFO, logging.DEBUG)[settings['logging_level'] - 1])
 
 
 def get_extensions(search_dir: str) -> list[str]:
