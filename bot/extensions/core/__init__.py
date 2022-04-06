@@ -20,7 +20,6 @@ class Core(commands.Cog):
 
     @commands.command()
     async def sync(self, ctx: commands.Context):
-        self.bot.tree.copy_global_to(guild=discord.Object(id=ctx.guild.id))
         await self.bot.tree.sync(guild=discord.Object(id=ctx.guild.id))
         await ctx.reply('Synchronised the bot command tree.')
 

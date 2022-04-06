@@ -14,6 +14,10 @@ class Bot(commands.Bot):
             except Exception as extension_error:
                 log.error(extension_error)
 
+        if settings['debug_mode']:
+            self.tree.copy_global_to(guild=discord.Object(id=settings['debug_guild_id']))
+            log.info(f'Copied global slash commands to guild ID {settings["debug_guild_id"]}')
+
         log.info(f'Logged in as {bot.user}')
 
     async def add_cog(self, cog: commands.Cog, *, settings_template: bot_settings.settings_template = None, **kwargs):

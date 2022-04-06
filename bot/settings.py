@@ -26,6 +26,10 @@ settings_template = list[Option | tomlkit.api.Comment | tomlkit.api.Whitespace]
 document_or_table = tomlkit.TOMLDocument | tomlkit.api.Table
 
 TEMPLATE = [
+    Comment('Don\'t touch this setting unless you know what you\'re doing!'),
+    Option('debug_mode', False),
+    Option('debug_guild_id', 0),
+    Newline(),
     Comment('Add your bot token into the below string - don\'t share this with anybody!'),
     Option('bot_token', ''),
     Newline(),
