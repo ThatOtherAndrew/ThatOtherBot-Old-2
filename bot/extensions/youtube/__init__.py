@@ -5,16 +5,11 @@ import discord
 from discord.ext.commands import Cog
 import youtubesearchpython.__future__ as yt
 
-from bot.settings import Option
-
 if TYPE_CHECKING:
     from main import Bot
 
 
 root = Path(__file__).parent
-settings = [
-    Option('key', 'value'),
-]
 
 
 class YouTube(Cog):
@@ -39,4 +34,4 @@ class YouTube(Cog):
 
 
 async def setup(bot: 'Bot'):
-    await bot.add_cog(YouTube(bot), settings_template=settings)
+    await bot.add_cog(YouTube(bot))
