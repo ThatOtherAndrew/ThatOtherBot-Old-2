@@ -2,7 +2,8 @@ import discord
 from discord.ext import commands
 
 import bot.settings as bot_settings
-from bot.tools import log, settings, get_extensions
+from bot.settings import settings
+from bot.tools import log, get_extensions
 
 
 class Bot(commands.Bot):
