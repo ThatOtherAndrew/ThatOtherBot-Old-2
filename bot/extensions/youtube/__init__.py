@@ -18,6 +18,7 @@ class YouTube(Cog):
 
     @discord.app_commands.command()
     async def youtube(self, interaction: discord.Interaction, search_query: str):
+        """Search YouTube for a video and get the top result."""
         results = await yt.VideosSearch(search_query, limit=1).next()
 
         if results['result']:
