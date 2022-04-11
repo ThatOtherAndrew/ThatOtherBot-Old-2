@@ -93,7 +93,7 @@ class Lobby(discord.ui.View):
         embed = discord.Embed(
             title='BombParty Game in Progress',
             description=f'{len(self.players)} player{" is" if len(self.players) == 1 else "s are"} currently playing.',
-            colour=0x3AA35B
+            colour=discord.Colour.green()
         )
         embed.set_footer(
             text=f'{self.leader.display_name} is the current game leader.',
@@ -181,7 +181,7 @@ class BombParty(Cog):
         embed = discord.Embed(
             title=f'BombParty Game Lobby ({len(lobby.players)})',
             description='Join the game with the buttons below!',
-            colour=0x5865F2
+            colour=discord.Colour.blurple()
         )
         embed.set_footer(
             text=f'{interaction.user.display_name} is the current game leader.',

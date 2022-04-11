@@ -27,7 +27,7 @@ class YouTube(Cog):
             embed = discord.Embed(
                 title='No YouTube search results found',
                 description='Try rewording your query, or try again later if there are still no results found.',
-                colour=0xFF0000
+                colour=discord.Colour.red()
             )
             icon = discord.File(root/'search.png', filename='icon.png')
             embed.set_thumbnail(url='attachment://icon.png')
