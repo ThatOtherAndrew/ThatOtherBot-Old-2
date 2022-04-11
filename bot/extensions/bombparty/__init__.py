@@ -14,6 +14,7 @@ if TYPE_CHECKING:
 
 root = Path(__file__).parent
 settings_template = [
+    Option('starting_lives', 3, is_in=range(1, 11)),
     Option('bomb_timer', 8, enforce_type=False, validator=lambda value: isinstance(value, (int, float)))
 ]
 
@@ -111,7 +112,10 @@ class Game:
     def __init__(self, bot: 'Bot', thread: discord.Thread, players: list[discord.Member], words: set[str]):
         self.bot = bot
         self.thread = thread
-        self.players = random.sample(players, len(players))
+        self.players = [
+            {'user': player, 'lives': settings['bombparty']['starting_lives']}
+            for player in random.sample(players, len(players))
+        ]
         self.words = words
         self.used_words = []
         self.playing = True
@@ -122,23 +126,31 @@ class Game:
 
         while self.playing:
             current_player = self.players.pop(0)
-            await self.thread.send(f'> 🧨 {current_player.mention}: **{self.prompt}**')
+            mention = current_player['user'].mention
+            hearts = '❤️' * current_player['lives']
+            await self.thread.send(f'> 🧨 `{hearts}` {mention}: **{self.prompt}**')
 
             try:
                 guess: discord.Message = await self.bot.wait_for(
                     'message',
-                    check=lambda message: message.author == current_player and self.check_guess(message.content),
+                    check=lambda msg: msg.author == current_player['user'] and self.check_guess(msg.content),
                     timeout=float(settings['bombparty']['bomb_timer'])
                 )
             except asyncio.TimeoutError:
-                await self.thread.send(f'> 💥 {current_player.mention} was too slow and exploded!')
+                if current_player['lives'] == 1:
+                    await self.thread.send(f'> 💀 {mention} was too slow and exploded!')
+                else:
+                    current_player['lives'] -= 1
+                    await self.thread.send(f'> 💥 `{hearts[:-2]}` {mention} was too slow and lost a life!')
+                    self.players.append(current_player)
             else:
                 await self.thread.send(f'> ✅ `{guess.content}` is correct!')
                 self.players.append(current_player)
                 self.prompt = self.generate_prompt()
 
             if len(self.players) == 1:
-                await self.thread.send(f'> 🏆 {self.players[0].mention} is the winner!')
+                winner = self.players[0]
+                await self.thread.send(f'> 🏆 `{"❤️" * winner["lives"]}` {winner["user"].mention} is the winner!')
                 self.playing = False
 
         embed = discord.Embed(title='BombParty Game Ended', description='This game of BombParty is no longer active.')
