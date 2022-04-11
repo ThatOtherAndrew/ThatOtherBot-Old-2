@@ -175,7 +175,15 @@ class BombParty(Cog):
         """Start a game of BombParty to play with your friends!"""
         await interaction.response.send_message(embed=discord.Embed(title='Loading, please wait...'))
         message = await interaction.original_message()
-        thread = await message.create_thread(name='BombParty', auto_archive_duration=60)
+        try:
+            thread = await message.create_thread(name='BombParty', auto_archive_duration=60)
+        except discord.errors.Forbidden:
+            await message.edit(embed=discord.Embed(
+                title='Missing thread permissions!',
+                description='Please grant the bot thread permissions here or try another channel.',
+                colour=discord.Colour.red()
+            ))
+            return
         lobby = Lobby(message, thread, interaction.user)
 
         embed = discord.Embed(
