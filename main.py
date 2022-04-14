@@ -46,11 +46,6 @@ class Bot(commands.Bot):
 bot = Bot(command_prefix='!', intents=discord.Intents.all())
 
 
-@bot.tree.command()
-async def test(interaction: discord.Interaction):
-    await interaction.response.send_message(settings['core']['test_message'])
-
-
 if __name__ == '__main__':
     if settings['debug_mode']:
         if settings['logging_level'] == 3:

@@ -9,9 +9,7 @@ if TYPE_CHECKING:
     from main import Bot
 
 
-settings = [
-    Option('test_message', 'Received!'),
-]
+settings = []
 
 
 class Core(commands.Cog):
