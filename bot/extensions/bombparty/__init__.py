@@ -7,15 +7,18 @@ from typing import TYPE_CHECKING
 import discord
 from discord.ext.commands import Cog
 
-from bot.settings import settings, Option
+from bot.settings import settings, Option, Comment
 
 if TYPE_CHECKING:
     from main import Bot
 
 root = Path(__file__).parent
 settings_template = [
+    Comment('Number of lives for each player to begin with (must be between 1 and 10)'),
     Option('starting_lives', 3, is_in=range(1, 11)),
-    Option('bomb_timer', 8, enforce_type=False, validator=lambda value: isinstance(value, (int, float)))
+    Comment('Number of seconds each player has to come up with a word'),
+    Comment('Can be either an integer or float value of at least 1'),
+    Option('bomb_timer', 8, enforce_type=False, validator=lambda value: isinstance(value, (int, float)) and value >= 1)
 ]
 
 
