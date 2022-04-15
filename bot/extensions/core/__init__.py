@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from main import Bot
 
 
-settings = []
+settings_template = []
 
 
 class Core(commands.Cog):
@@ -32,4 +32,4 @@ class Core(commands.Cog):
 
 
 async def setup(bot: 'Bot'):
-    await bot.add_cog(Core(bot), settings_template=settings)
+    await bot.add_cog(Core(bot), settings_template=settings_template)
