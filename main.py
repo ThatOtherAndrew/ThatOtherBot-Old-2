@@ -22,17 +22,8 @@ class Bot(commands.Bot):
         log.info(f'Logged in as {bot.user}')
 
     async def add_cog(self, cog: commands.Cog, *, settings_template: bot_settings.settings_template = None, **kwargs):
-        table_name = cog.__class__.__name__
-
         if settings_template is not None:
-            if table_name in settings:
-                table = settings[table_name]
-            else:
-                log.info(f'Table "{table_name}" in configuration file missing, generating from template')
-                table = bot_settings.generate(settings_template, table=True)
-
-            settings[table_name] = bot_settings.validate(table, settings_template)
-            bot_settings.save(settings, 'settings.toml')
+            bot_settings.add_table(cog.__class__.__name__, settings_template)
 
         await super().add_cog(cog, **kwargs)
 

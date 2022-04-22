@@ -102,4 +102,15 @@ def validate(toml_document: document_or_table, template: settings_template) -> d
     return toml_document
 
 
+def add_table(name: str, template: settings_template) -> None:
+    if name in settings:
+        table = settings[name]
+    else:
+        _logger.info(f'Table "{name}" in configuration file missing, generating from template')
+        table = generate(template, table=True)
+
+    settings[name] = validate(table, template)
+    save(settings, 'settings.toml')
+
+
 settings = load('settings.toml')
