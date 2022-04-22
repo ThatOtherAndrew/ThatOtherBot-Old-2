@@ -116,7 +116,7 @@ class Game:
         self.bot = bot
         self.thread = thread
         self.players = [
-            {'user': player, 'lives': settings['bombparty']['starting_lives']}
+            {'user': player, 'lives': settings['BombParty']['starting_lives']}
             for player in random.sample(players, len(players))
         ]
         self.words = words
@@ -137,7 +137,7 @@ class Game:
                 guess: discord.Message = await self.bot.wait_for(
                     'message',
                     check=lambda msg: msg.author == current_player['user'] and self.check_guess(msg.content),
-                    timeout=float(settings['bombparty']['bomb_timer'])
+                    timeout=float(settings['BombParty']['bomb_timer'])
                 )
             except asyncio.TimeoutError:
                 if current_player['lives'] == 1:

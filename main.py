@@ -22,7 +22,7 @@ class Bot(commands.Bot):
         log.info(f'Logged in as {bot.user}')
 
     async def add_cog(self, cog: commands.Cog, *, settings_template: bot_settings.settings_template = None, **kwargs):
-        table_name = cog.__class__.__name__.lower()
+        table_name = cog.__class__.__name__
 
         if settings_template is not None:
             if table_name in settings:
